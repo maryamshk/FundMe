@@ -14,7 +14,14 @@ contract FundMe{
     //msg.value is considered frst parameter in any library fn so we don't have to pass value in fn argument
     require(msg.value.getConversionRate()>=mininmumUSD, "didn't send enough"); 
        funders.push(msg.sender);
-       addressToAmountFunded[msg.sender]=msg.value;
+    addressToAmountFunded[msg.sender]+=msg.value;
+    }
+
+    function withdraw() public{
+        for(uint256 fIndex=0; fIndex<funders.length; fIndex++){
+            address funderAddress=funders[fIndex];
+            addressToAmountFunded[funderAddress]=0;
+        }
     }
 }
 
