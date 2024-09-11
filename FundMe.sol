@@ -11,9 +11,15 @@ pragma solidity ^0.8.26;
 //import directly from github
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 contract FundMe{
-     uint256 mininmumUSD=50;
+     uint256 mininmumUSD=50 * 1e18;
+     mapping(address=>uint256) public addressToAmountFunded;
+
     // to make fn payable w any currency, use payable keyword
     //like wallets can hold funds, contract addresses does too
+
+    //where people who send fund address will be stored
+    address[] public funders;
+
     function fund() public payable{
     //to get how much value someone sending (msg.value) should be atleast 1 eth
     //money maths is done in terms of WEI
@@ -22,6 +28,9 @@ contract FundMe{
 
     require(getConversionRate(msg.value)>=mininmumUSD, "didn't send enough"); //1e18=1*10**18   1eth in wei
     //to convert eth into usd, we'll use oracle and chainlink
+
+    funders.push(msg.sender);
+    addressToAmountFunded[msg.sender]=msg.value;
     }
 
     function getPrice() public view returns(uint256){
@@ -33,6 +42,7 @@ contract FundMe{
 //eth in terms of usd
 // 3000.00000000     //8 decimal places where as msg.value is gonna be 18 decimal places
 //to make them equal
+
      //typecasting to uint256
 return uint256(value*1e10);  //1**10=10000000000  
     }
