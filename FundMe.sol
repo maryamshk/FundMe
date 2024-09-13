@@ -5,9 +5,9 @@ import "./PriceConverter.sol";
 
 contract FundMe{
     using PriceConverter for uint256;
-     uint256 mininmumUSD=50 * 1e18;
-     mapping(address=>uint256) public addressToAmountFunded;
-     address public owner;
+    uint256 public constant MINIMUM_USD=50 * 1e18;
+    mapping(address=>uint256) public addressToAmountFunded;
+    address public owner;
 
     constructor(){
         owner=msg.sender;    //is going to be whoever is deploying the contract
